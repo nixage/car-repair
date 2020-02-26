@@ -21,7 +21,7 @@
             </div>
             <hr>
             
-            <mat-form-field [ngClass]="{'mat-form-field': false}">
+            <mat-form-field [ngClass]="{'mat-form-field': false, 'submited': submited}">
               <mat-label>Mark</mat-label>
               <mat-select (selectionChange)="selectedMark($event.value)" formControlName="mark">
                 <mat-option  *ngFor="let mark of carsMark" [value]="mark">
@@ -30,7 +30,7 @@
               </mat-select>
             </mat-form-field>
 
-            <mat-form-field [ngClass]="{'mat-form-field': false}">
+            <mat-form-field [ngClass]="{'mat-form-field': false, 'submited': submited}">
               <mat-label>Model</mat-label>
               <mat-select (selectionChange)="selectedModel($event.value)" formControlName="model">
                 <mat-option *ngFor="let model of carsModel" [value]="model">
@@ -39,7 +39,7 @@
               </mat-select>
             </mat-form-field>
 
-            <mat-form-field [ngClass]="{'mat-form-field': false}">
+            <mat-form-field [ngClass]="{'mat-form-field': false, 'submited': submited}">
               <mat-label>Year</mat-label>
               <mat-select (selectionChange)="selectedYear()" formControlName="year">
                 <mat-option *ngFor="let year of carsYear" [value]="year">
@@ -48,9 +48,17 @@
               </mat-select>
             </mat-form-field>
 
-            <mat-form-field class="example-full-width">
+            <mat-form-field class="example-full-width" [ngClass]="{'mat-form-field': false, 'submited': submited}">
               <mat-label>What exactly need to be repaired?</mat-label>
-              <input matInput >
+              <input matInput formControlName="needRepaired">
+              <div class="error-message" *ngIf="submited">
+                <mat-error *ngIf="f.needRepaired.errors?.required">
+                  This Field is required
+                </mat-error>
+                <mat-error *ngIf="f.needRepaired.errors?.minlength">
+                  Min length 6
+                </mat-error>
+              </div>
             </mat-form-field>
 
             <div class="desc">
@@ -68,7 +76,7 @@
             </div>
             <hr>
 
-            <mat-form-field [ngClass]="{'mat-form-field': false}">
+            <mat-form-field [ngClass]="{'mat-form-field': false, 'submited': submited}">
               <mat-label>Category of Work</mat-label>
               <mat-select formControlName="categoryWork">
                 <mat-option  *ngFor="let work of categoryWork" [value]="work.category" [matTooltip]="work.title" matTooltipPosition="above">
@@ -77,7 +85,7 @@
               </mat-select>
             </mat-form-field>
 
-            <mat-form-field [ngClass]="{'mat-form-field': false}">
+            <mat-form-field [ngClass]="{'mat-form-field': false, 'submited': submited}">
               <mat-label>Subcategory</mat-label>
               <mat-select formControlName="speedOfWork">
                 <mat-option  value="fast" matTooltip="(+10$ on day)" matTooltipPosition="above">
@@ -89,7 +97,7 @@
               </mat-select>
             </mat-form-field>
 
-            <mat-form-field [ngClass]="{'mat-form-field': false}">
+            <mat-form-field [ngClass]="{'mat-form-field': false, 'submited': submited}">
               <mat-label>Select Emirate</mat-label>
               <mat-select formControlName="emirate">
                 <mat-option value="USA">
@@ -98,7 +106,7 @@
               </mat-select>
             </mat-form-field>
 
-            <mat-form-field [ngClass]="{'mat-form-field': false}">
+            <mat-form-field [ngClass]="{'mat-form-field': false, 'submited': submited}">
               <mat-label>Select Area</mat-label>
               <mat-select formControlName="area">
                 <mat-option *ngFor="let area of area" [value]="area">
@@ -109,9 +117,9 @@
 
             <mat-checkbox *ngFor="let service of otherService; let i = index; trackBy: trackByFn" (change)="addOtherService($event, service, i)">{{ service }}</mat-checkbox>
 
-            <mat-form-field [ngClass]="{'mat-form-field': false}">
+            <mat-form-field [ngClass]="{'mat-form-field': false, 'submited': submited}">
               <mat-label>Input disabled</mat-label>
-              <input matInput [matDatepicker]="dp3" disabled [min]='date' formControlName="date">
+              <input matInput [matDatepicker]="dp3" disabled [min]='date' (dateChange)="dateChange($event.value)">
               <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
               <mat-datepicker #dp3 disabled="false"></mat-datepicker>
             </mat-form-field>
@@ -124,13 +132,10 @@
           </div>
 
           <div class="buttons">
-
-            <button mat-stroked-button (click)="submitForm()">Basic</button>
-            <button mat-stroked-button (click)="clearForm()">Basic</button>
+            <button mat-stroked-button (click)="submitForm()" [disabled]="carsForm.invalid">Send</button>
+            <button mat-stroked-button (click)="clearForm()">Clear</button>
           </div>
 
-          {{ f.mark.errors | json}}
-  
         </form>
 
 

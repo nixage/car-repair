@@ -40,7 +40,7 @@ const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   database: "cars_repair",
-  password: "....."
+  password: "bealong123"
 });
 
 connection.connect(function(err){
@@ -58,7 +58,7 @@ let transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
       user: 'xodanych66@gmail.com',
-      pass: '...'
+      pass: 'bealong123321'
     }
   });
 

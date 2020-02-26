@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormArray, MinLengthValidator, AbstractControl } from '@angular/forms';
 
-import { CarsService, ICars } from './service/cars.service'
+import { CarsService, ICars } from './service/cars.service';
+
+import { ToastrService } from 'ngx-toastr'
 
 @Component({
   selector: 'app-root',
@@ -30,11 +32,11 @@ export class AppComponent implements OnInit {
   ]
   area: string[] = ['Chicago', 'New Mexico', 'Phoenix']
   otherService: Array<string> = ['Need tow Truch', 'Need car Pickup', 'Custom Parts']
-
   /* ====== */
 
   carsForm: FormGroup;
-  constructor(private carsService: CarsService) {
+  submited: boolean = false;
+  constructor(private carsService: CarsService, private toastrService: ToastrService) {
     
   }
 
@@ -43,10 +45,15 @@ export class AppComponent implements OnInit {
       this.allCars = data;
       this.getUniqueArray(data, 'mark', this.carsMark)
     })
+    this.setCarsFrom()
+  }
+
+  setCarsFrom(): void{
     this.carsForm = new FormGroup({
       mark: new FormControl('', Validators.required),
       model: new FormControl({value: '', disabled: true}, Validators.required),
       year: new FormControl({value: '', disabled: true}, Validators.required),
+      needRepaired: new FormControl(''),
       categoryWork: new FormControl('', Validators.required),
       speedOfWork: new FormControl('', Validators.required),
       emirate: new FormControl('', Validators.required),
@@ -54,17 +61,16 @@ export class AppComponent implements OnInit {
       otherService: new FormArray([
 
       ]),
-      date : new FormControl('')
+      date : new FormControl('', Validators.required)
     })
-
   }
 
   get f() { return this.carsForm.controls; }
 
-  get otherServiceFormArray() { return this.carsForm.get('otherService') as FormArray}
+  get otherServiceFormArray(): FormArray { return this.carsForm.get('otherService') as FormArray}
 
 
-  selectedMark(mark){
+  selectedMark(mark): void{
     if (this.carsModel.length != 0){
       if (this.carsYear.length != 0){
         this.carsYear = []
@@ -77,10 +83,9 @@ export class AppComponent implements OnInit {
     }
     let selectMark = this.allCars.filter( (val ) => val.mark == mark)
     this.getUniqueArray(selectMark, 'model', this.carsModel)
-    console.log(this.f.model)
     this.f.model.enable()
   }
-  selectedModel(model){
+  selectedModel(model): void{
     if (this.carsYear.length != 0){
       this.carsYear = []
       this.f.year.setValue({value: '', disabled: true}, Validators.required)
@@ -94,32 +99,47 @@ export class AppComponent implements OnInit {
     this.step2 = true
   }
 
-  addOtherService(event, value, index){
-    console.log(index)
+  addOtherService(event, value, index): void{
     if (event.checked){
       this.otherServiceFormArray.push(new FormControl(value))
-      console.log(this.otherServiceFormArray)
       return
     }
     this.otherServiceFormArray.removeAt(index)
 
-    console.log(this.otherServiceFormArray)
   }
 
-  clearForm(){
-    this.carsForm.reset()
-    this.f.model.disable()
-    this.f.year.disable()
-    this.step2 = false
+  dateChange(date): void{
+    const selectDate = new Date(date).toLocaleDateString()
+    this.f.date.setValue(selectDate)
   }
 
-  submitForm(){
-    console.log(this.carsForm.value)
-    this.carsService.regCar(this.carsForm.value).subscribe( data => console.log(data))
+  clearForm(): void{
+    this.carsForm.reset();
+    this.f.model.disable();
+    this.f.year.disable();
+    this.step2 = false;
+    this.submited = false;
+  }
+
+  submitForm(): void{
+    this.submited = true
+    this.f.needRepaired.setValidators([Validators.required, Validators.minLength(6)])
+    this.f.needRepaired.updateValueAndValidity()
+    if (this.carsForm.valid){
+      this.carsService.regCar(this.carsForm.value).subscribe( data => {
+        this.toastrService.success('Ваш заказ принят')
+        this.submited = false;
+        this.carsForm.reset(this.setCarsFrom())
+        setTimeout(() => location.reload(), 1000)
+        return
+      })
+      return
+    }
+    this.toastrService.error('Заполните форму')
   }
 
 
-  getUniqueArray(fromArray, field:string, toArray){
+  getUniqueArray(fromArray, field:string, toArray): void{
     fromArray.forEach( (val, ind) => {
       if (toArray.indexOf(val[field]) === -1){
         toArray.push(val[field])

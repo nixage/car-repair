@@ -21,7 +21,7 @@ export class CarsService {
     return this.http.get<Array<ICars>>(this.baseUrl + '/cars')
   }
 
-  regCar(data){
+  regCar(data): Observable<object>{
     return this.http.post(this.baseUrl + '/reg-car', data)
   }
 
