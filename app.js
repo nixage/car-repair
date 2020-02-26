@@ -57,7 +57,7 @@ connection.connect(function(err){
 let transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-      user: 'xodanych66@gmail.com',
+      user: '',
       pass: ''
     }
   });
