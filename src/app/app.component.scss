@@ -1,0 +1,36 @@
+
+.car-repair-form {
+    padding: 100px 0px;
+
+    .step-1, .step-2{
+        max-width: 500px;
+        width: 500px;
+        padding: 0px 0px 0px 10px;
+        position: relative;
+
+        .title{
+            margin-bottom: 22px;
+        }
+
+        .desc{
+            margin-top: auto;
+        }
+
+    }
+
+    .buttons {
+        display: block;
+        width: 100%;
+        text-align: center;
+        button {
+            margin: 5px;
+        }
+    }
+
+    hr{
+        width: 100%;
+        position: absolute;
+        left: 0px;
+        top: 60px;
+    }
+}

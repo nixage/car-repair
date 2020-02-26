@@ -1,1 +1,48 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; margin: 0px;}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif; 
+    background: black;
+    color: white;
+}
+
+*{
+    box-sizing: border-box;
+}
+h1,h2,h3,h4{
+    margin: 0px;
+}
+
+/* GLOCAB CLASSES */
+
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+.flex-center {
+    justify-content: center;
+}
+
+.flex-evenly{
+    justify-content: space-evenly;
+}
+.flex-column{
+    display: flex;
+    flex-direction: column;
+}
+.mat-tooltip{
+    font-size: 16px !important;
+}
+
+/* ============== */
+
+
