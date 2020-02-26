@@ -40,7 +40,7 @@ const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   database: "cars_repair",
-  password: "bealong123"
+  password: ""
 });
 
 connection.connect(function(err){
@@ -58,7 +58,7 @@ let transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
       user: 'xodanych66@gmail.com',
-      pass: 'bealong123321'
+      pass: ''
     }
   });
 
@@ -84,8 +84,8 @@ server.get('/cars', function(req, res){
 
 server.post('/reg-car', function(req, res){
   transporter.sendMail({
-    from: 'xodanych66@gmail.com',
-    to: "xodanych66@gmail.com",
+    from: '',
+    to: '',
     subject: `Заказ на ремонт автомобиля ${req.body.mark} ${req.body.model}`,
     text: "В ближайшее время с вами свяжется наш менеджер",
   }, function(err, info) {
